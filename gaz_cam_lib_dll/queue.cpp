@@ -4,43 +4,59 @@
 
 int enqueue(Queue* queue,Node* node)
 {
-    if(!queue)return 1;
-    sem_wait(&queue->sema);
-    if(queue->counter==queue->capacity){
-        sem_post(&queue->sema);
+    if(queue->capacity==queue->counter)
         return 1;
-    }
-    else{
-        if(queue->head==NULL)
-            (queue)->head=node;
-        else
+       //free(node);
+    else
+        {
+            printf("enque!!!!!!!!!!1\n");
+            sem_wait(&queue->sema);
+            if(queue->head==NULL)
+            {
+                queue->tail=queue->head=node;
+                queue->counter++;
+            }
+            else{
+
             queue->tail->next=node;
-        queue->counter++;
-        queue->tail=node;
-    }
-    sem_post(&queue->sema);
-    return 0;
+            queue->counter++;
+            }
+            sem_post(&queue->sema);
+            return 0;
+        }
 }
+
 Node* dequeue(Queue* queue)
 {
-    if(!queue)return NULL;
     if(queue->counter==0)
         return NULL;
     sem_wait(&queue->sema);
     queue->counter--;
     Node *n=queue->head;
+
+//  int** base_mat=(int**)(n->data);
+//    for(int i=0;i<240;i++){
+//        for(int j=0;j<320;j++){
+//            printf("gfhbjnkm %d\n",base_mat[i][j]);
+//        }
+//    }
+
+
     queue->head=queue->head->next;
     sem_post(&queue->sema);
     return n;
 }
+
+
 Node* createNode(void* data)
 {
-    Node* node=(Node*)malloc(sizeof(Node));
+    Node* node=(Node*)calloc(1,sizeof(Node));
     if(!node)exit(1);
     node->data=data;
     node->next=NULL;
     return node;
 }
+
 Queue* createQueue(int max)
 {
     Queue* queue=(Queue*)malloc(sizeof(Queue));
@@ -59,27 +75,17 @@ void freeNode(Node* node)
 }
 void freeQueue(Queue* queue)
 {
-    if(queue){
-        while(queue->head)
-            freeNode(dequeue(queue));
-        free(queue);
-    }
+    while(queue->head)
+        freeNode(dequeue(queue));
+    free(queue);
 }
 int isEmpty(Queue* queue){
-    if(!queue)
+    if(queue->counter>0){
         return 0;
-    return !(queue->counter);
-}
-Node* top(Queue* queue)
-{
-    if(!queue)return NULL;
-    sem_wait(&queue->sema);
-    if(!isEmpty(queue))
-    {
-        sem_post(&queue->sema);
-        return queue->head;
     }
-    sem_post(&queue->sema);
-    return NULL;
+    return 1;
+    //return !(queue->counter);
 }
+
+
 

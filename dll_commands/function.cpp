@@ -1,12 +1,8 @@
-
 #include "function.h"
 #include <stdlib.h>
-#include "gaz_cam_lib_dll.h"
-//#include <string.h>
-//#include <iostream.h>
-extern gas_api* p_gas;
-extern handler_t * handler;
-
+#include <string>
+#include <QCoreApplication>
+#include <iostream>
 void start_record(char* param){
     char** arr=splitArg(param,4);
     printf("arr0%s\n",arr[0]);
@@ -28,8 +24,7 @@ void start_record(char* param){
         arr[1]=arr[1]+1;
         arr[1]=strtok(arr[1],"\"");
 
-
-    }
+}
       else{arr[1]="null";}
     if(arr[2]){
         if(validParam("double",arr[2])==0){
@@ -44,20 +39,16 @@ void start_record(char* param){
             return;
         }
 }
+      else{arr[3]="0";}
 
-    else{arr[3]="0";}
 
-    //record_tt r=getRecord();
-    record_t r2;
-    p_gas->start_record(handler,r2);
-    start_record_cli(atoi(arr[0]),arr[1],atof(arr[2]),atoi(arr[3]));
+
+    start_record(atoi(arr[0]),arr[1],atof(arr[2]),atoi(arr[3]));
 }
-
-void start_record_cli(int n1, char* n2,double n3,int n4){
+void start_record(int n1, char* n2,double n3,int n4){
              printf("num1 %d num2 %s num3 %f num4 %d\n",n1,n2,n3,n4);
 
-
-}
+             }
 void stop_record(char*param){
      printf("stop\n");
     char** arr=splitArg(param,4);
@@ -91,20 +82,13 @@ char** splitArg(char* param,int num){
     }
 return arr;
 }
-void do_snap_shot_cli(char * param){
-    snapshot_t t2;
-    p_gas->do_snapshot(handler,t2);
-}
-
 Func* reset(){
     Func* func=NULL;
     func=registerFunc(&func,"sr",start_record,"help start record");
         func=registerFunc(&func,"stop",stop_record,"help stop record");
         func=registerFunc(&func,"status",get_status,"help status");
-        func=registerFunc(&func,"snap_shot",do_snap_shot_cli,"help do snapshot");
-        return func;
+return func;
 }
-
 Func*  registerFunc(Func** pfunc, char* name,void(*command)(char*),char* help){
     Func* temp= (Func*)calloc(1,sizeof (Func));
     temp->command=command;
@@ -149,4 +133,3 @@ int validParam(char * type,char* param){
     }
     return 0;
 }
-

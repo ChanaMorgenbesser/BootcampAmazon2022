@@ -12,14 +12,14 @@ typedef struct queue{
     int capacity;
     int counter;
     sem_t sema;
-}QueueC,*p_queue;
+}Queue,*p_queue;
 
-int enqueue(QueueC* queue,Node* node);
-Node* dequeue(QueueC* queue);
-Node* createNode(void* data);
-void * topqueue(QueueC * queue);
-void freeNode(Node* node);
-void freeQueue(QueueC* queue);
-QueueC*createQueue(int max);
-int isEmpty(QueueC* queue);
+int enqueue(Queue*,Node*);
+Node* dequeue(Queue*);
+Node* createNode(void*);
+Queue* createQueue(int);
+void freeNode(Node*);
+void freeQueue(Queue*);
+int isEmpty(Queue*);
+Node* top(Queue*);
 #endif // QUEUE_H

@@ -8,10 +8,7 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        entercommand.c \
-        function.c \
-        gpio.c \
-        jsondata.c \
+        cfg.c \
         main.c
 
 # Default rules for deployment.
@@ -20,9 +17,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    entercommand.h \
-    function.h \
-    gaz_cam_lib_dll.h \
-    gpio.h \
-    jsondata.h \
-    queue.h
+    cfg.h
